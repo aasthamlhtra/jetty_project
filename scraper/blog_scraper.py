@@ -24,15 +24,14 @@ def scrape_blog(url):
     published_date = ""
     content = ""
 
-    # --- title ---
+    # title
     if soup.find("h1"):
         title = soup.find("h1").get_text(strip=True)
 
-    # --- LD+JSON: must read BEFORE removing script tags ---
+    # LD+JSON: read before removing script tags
     for script_tag in soup.find_all("script", attrs={"type": "application/ld+json"}):
         try:
             ld = json.loads(script_tag.string or "")
-            # unwrap list first, then read fields
             if isinstance(ld, list):
                 ld = ld[0]
             if not isinstance(ld, dict):
@@ -52,11 +51,11 @@ def scrape_blog(url):
         except Exception:
             continue
 
-    # --- NOW remove noise elements (after LD+JSON is read) ---
+    # remove noise elements (after LD+JSON is read)
     for tag in soup(["nav", "footer", "script", "style", "aside", "header", "form"]):
         tag.decompose()
 
-    # --- author fallbacks ---
+    # author fallbacks
     if not author:
         author_meta = soup.find("meta", attrs={"name": "author"})
         if author_meta:
@@ -74,7 +73,7 @@ def scrape_blog(url):
         if rel_author:
             author = rel_author.get_text(strip=True)
 
-    # --- date fallbacks ---
+    # date fallbacks
     if not published_date:
         date_meta = soup.find("meta", attrs={"property": "article:published_time"})
         if date_meta:
@@ -92,7 +91,7 @@ def scrape_blog(url):
         if time_tag:
             published_date = time_tag.get("datetime", "") or time_tag.get_text(strip=True)
 
-    # --- content extraction ---
+    # content extraction
     for selector in ["article", "main", '[role="main"]',
                      ".post-content", ".entry-content", ".article-body"]:
         container = soup.find(selector) if not selector.startswith(".") \
@@ -107,7 +106,7 @@ def scrape_blog(url):
         p.get_text(strip=True) for p in paragraphs if len(p.get_text(strip=True)) > 30
     )
 
-    # --- language detection ---
+    # language detection
     try:
         language = detect(content) if content else "unknown"
     except Exception:
