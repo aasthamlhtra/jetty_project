@@ -1,0 +1,10 @@
+requests
+beautifulsoup4
+lxml
+youtube-transcript-api
+langdetect
+langchain
+langchain-openai
+openai
+dotenv
+numpy
