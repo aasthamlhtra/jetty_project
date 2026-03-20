@@ -42,7 +42,7 @@ def get_top_chunks(title, chunks, top_n=3):
     """
 
     # I didn't use a vector DB like chroma or FAISS to store the embeddings
-    # vector DBs solve a persistence problem we don't have.
+    # vector DBs solve a persistence problem which we don't have.
     # We embed, score, grab the top chunks, and move on, nothing needs to stick around
     # between runs. Spinning up a Chroma collection just to sort 10-20 vectors and
     # immediately throw them away would be all overhead and no benefit.
