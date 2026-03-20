@@ -3,11 +3,9 @@ from bs4 import BeautifulSoup
 from langdetect import detect
 import re
 
-# uses the PubMed eutils API - free and no auth needed
 PUBMED_API_BASE = "https://eutils.ncbi.nlm.nih.gov/entrez/eutils"
 
 def extract_pmid(url):
-    # works for urls like https://pubmed.ncbi.nlm.nih.gov/12345678/
     match = re.search(r"/(\d{6,})", url)
     if match:
         return match.group(1)
